@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.edisongrauman.lightcontrol;
+
 import ch.bildspur.artnet.ArtNetBuffer;
 import ch.bildspur.artnet.ArtNetClient;
 
@@ -10,46 +11,65 @@ import ch.bildspur.artnet.ArtNetClient;
  *
  * @author Edison Grauman
  */
-public class ArtNetInstance {
-   
+public class ArtNetInstance implements Instance{
+
     ArtNetClient artnet;
     ArtNetBuffer buffer;
 
-    int serverPort = 8000;
-    int clientPort = 8000;
+    int serverPort;
+    int clientPort;
     String ipAddress;
     
-    String subnet;
-    int universe;
+    int instanceID;
     
-    public ArtNetInstance(String ipAddress, int serverPort, int clientPort) {
+
+//    String subnet;
+//    int universe;
+    public ArtNetInstance(String ipAddress, String serverPort, String clientPort) {
         this.ipAddress = ipAddress;
-        this.serverPort = serverPort;
-        this.clientPort = clientPort;
-        
-       buffer = new ArtNetBuffer();
-       artnet = new ArtNetClient(buffer, serverPort, clientPort);
-       
-//       start();
-       
+        this.serverPort = Integer.parseInt(serverPort);
+        this.clientPort = Integer.parseInt(clientPort);
     }
-    
+    public ArtNetInstance(Module m, int instanceID) {
+        System.out.println("New Artnet Instance");
+        ipAddress = m.getArtnetIPAddress();
+        serverPort = Integer.parseInt(m.getArtnetSourcePort());
+        clientPort = Integer.parseInt(m.getArtnetDestinationPort());
+        this.instanceID = instanceID;
+    }
+
     public void unicastDmx(byte[] buffer) {
         artnet.unicastDmx(ipAddress, 0, 0, buffer);
 
     }
-    
-    public void start() {
-        artnet.start();
-        System.out.println("Artnet Started");
+
+    public boolean start() throws Error {
+
+        try {
+            System.out.println(ipAddress);
+            buffer = new ArtNetBuffer();
+            artnet = new ArtNetClient(buffer, serverPort, clientPort);
+            artnet.start();
+            System.out.println("Artnet Started");
+        } catch (Exception e) {
+            throw new Error();
+        }
+        return artnet.isRunning();
     }
-    
-    public void stop() {
+
+    public boolean stop() {
         artnet.stop();
         System.out.println("Artnet Stopped");
-
+        return false;
     }
     
+    public void sendPacket() {
+        byte[] b = {1, 2, 3, 4};
+        artnet.unicastDmx(ipAddress, 0, 0, b);
+    }
     
-    
+    public int getID() {
+        return instanceID;
+    }
+
 }

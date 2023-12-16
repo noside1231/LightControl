@@ -26,8 +26,6 @@ public class OutputConfigViewer extends VBox {
     private ComboBox comboBox;
     private Button startStopButton;
     
-    private ToggleSwitch ts;
-
     private ArtNetConfigViewer artnetOptions;
     private OSCConfigViewer oscOptions;
 
@@ -61,12 +59,10 @@ public class OutputConfigViewer extends VBox {
             changeEventHandler.setEvent(ConfigPropertyTypes.START_STOP_MODULE);
         });
         
-        ts = new ToggleSwitch();
 
         getChildren().add(comboBox);
         getChildren().add(outputOptionPane);
         getChildren().add(startStopButton);
-        getChildren().add(ts);
 
     }
 
@@ -85,6 +81,11 @@ public class OutputConfigViewer extends VBox {
             outputOptionPane.getChildren().add(oscOptions);
         }
 
+    }
+    
+    public void setOutputConfigEdit(boolean b) {
+        comboBox.setDisable(!b);
+      
     }
 
     //Current Output Option Listener

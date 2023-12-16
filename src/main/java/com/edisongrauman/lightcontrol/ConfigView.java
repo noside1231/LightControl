@@ -108,6 +108,10 @@ public class ConfigView extends ScrollPane {
     public void removeFixture(int moduleIndex, int fixtureIndex) {
         moduleConfigViews.get(moduleIndex).removeFixture(fixtureIndex);
     }
+    
+    public void setModuleEdit(int moduleIndex, boolean b) {
+        moduleConfigViews.get(moduleIndex).setModuleEdit(b);
+    }
 
     public ConfigChangeEvent getChangeEvent() {
         return changeEventHandler;

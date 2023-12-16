@@ -13,6 +13,7 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+    private InstanceController instanceController;
     private MainMenuBar mainMenu;
     private FileManager fileManager;
     private ModuleContainer moduleContainer;
@@ -29,6 +30,8 @@ public class App extends Application {
 
         moduleContainer = new ModuleContainer();
 
+        instanceController = new InstanceController();
+
         mainMenu = new MainMenuBar();
         configView = new ConfigView();
 
@@ -41,15 +44,13 @@ public class App extends Application {
 
         //Menu Listeners
         setupMenuListeners(stage);
-        
+
         ChannelSlider cs = new ChannelSlider();
         root.setRight(cs);
-        
+
 //        ArtNetInstance a = new ArtNetInstance("127.127.0.0", 8000,8000);
 //        byte[] c = {1,2,3,4,5,6,7,8,9,10};
 //        a.unicastDmx(c);
-
-
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -78,9 +79,20 @@ public class App extends Application {
         moduleContainer.removeFixture(moduleIndex, fixtureIndex);
         configView.removeFixture(moduleIndex, fixtureIndex);
     }
-    
+
     private void startStopModule(int moduleIndex) {
         
+        if (instanceController.isInstanceRunning(moduleContainer.getModule(moduleIndex).getInstanceID())) {
+            
+        } else {
+            
+        }
+        int instanceID = instanceController.newInstance(moduleContainer.getModule(moduleIndex));
+        if (instanceID > 0) {
+            System.out.println("Started");
+            moduleContainer.getModule(moduleIndex).setInstanceID(instanceID);
+            configView.setModuleEdit(moduleIndex, false);
+        }
     }
 
     private void setupConfigurationViewListeners() {
@@ -141,9 +153,13 @@ public class App extends Application {
                     moduleContainer.setFixtureChannelCount(moduleIndex, fixtureIndex, value);
                     return;
                 case START_STOP_MODULE:
-                    
+
                     System.out.println("start stop module");
                     startStopModule(moduleIndex);
+                    return;
+                case TEST_ARTNET_PACKET:
+                    System.out.println("test artnet packet");
+                    instanceController.sendPacket();
                 default:
             }
         });

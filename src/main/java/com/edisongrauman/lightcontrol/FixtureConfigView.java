@@ -78,10 +78,10 @@ public class FixtureConfigView extends TitledPane {
     }
     
     public void setFixtureEdit(boolean b) {
-//        name.setDisable(!b);
-//        universe.setDisable(!b);
-//        channels.setDisable(!b);
-//        startFromChannel.setDisable(!b);
+        name.setDisable(!b);
+        universe.setDisable(!b);
+        channels.setDisable(!b);
+        startFromChannel.setDisable(!b);
         frame.setDisable(!b);
     }
 }

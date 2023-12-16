@@ -25,7 +25,8 @@ public enum ConfigPropertyTypes {
     FIXTURE_UNIVERSE,
     FIXTURE_CHANNEL_START,
     FIXTURE_CHANNEL_COUNT,
-    START_STOP_MODULE;
+    START_STOP_MODULE,
+    TEST_ARTNET_PACKET;
 
 //    public String getName() {
 //        switch (this) {

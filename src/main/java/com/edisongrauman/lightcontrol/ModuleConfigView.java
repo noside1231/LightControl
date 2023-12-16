@@ -4,6 +4,7 @@
  */
 package com.edisongrauman.lightcontrol;
 
+import static com.edisongrauman.lightcontrol.ConfigPropertyTypes.*;
 import java.util.ArrayList;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,6 +27,7 @@ public class ModuleConfigView extends TitledPane {
 
     private Button newFixtureButton;
     private Button deleteModuleButton;
+    private Button testArtnetPacketButton;
 
     private ArrayList<FixtureConfigView> fixtureConfigViews;
 
@@ -52,11 +54,11 @@ public class ModuleConfigView extends TitledPane {
 
         newFixtureButton = new Button("New Fixture");
         newFixtureButton.setOnAction(eh -> {
-            changeEventHandler.setEvent(ConfigPropertyTypes.NEW_FIXTURE);
+            changeEventHandler.setEvent(NEW_FIXTURE);
         });
         deleteModuleButton = new Button("Delete Module");
         deleteModuleButton.setOnAction(eh -> {
-            changeEventHandler.setEvent(ConfigPropertyTypes.DELETE_MODULE);
+            changeEventHandler.setEvent(DELETE_MODULE);
         });
 
         outputConfigViewer = new OutputConfigViewer(module);
@@ -64,8 +66,12 @@ public class ModuleConfigView extends TitledPane {
             changeEventHandler.setEvent(outputConfigViewer.getChangeEvent());
         });
         outputConfigViewer.getOutputOption().addListener(cl -> {
-            changeEventHandler.setEvent(ConfigPropertyTypes.OUTPUT_OPTION, outputConfigViewer.getOutputOption().getValue());
+            changeEventHandler.setEvent(OUTPUT_OPTION, outputConfigViewer.getOutputOption().getValue());
         });
+        
+        testArtnetPacketButton = new Button("Test Packet");
+        testArtnetPacketButton.setOnAction(eh -> changeEventHandler.setEvent(TEST_ARTNET_PACKET));
+        
 
         configVBox.getChildren().add(name);
         configVBox.getChildren().add(deleteModuleButton);
@@ -74,6 +80,7 @@ public class ModuleConfigView extends TitledPane {
         configVBox.getChildren().add(new Label("Fixtures"));
         configVBox.getChildren().add(newFixtureButton);
         configVBox.getChildren().add(fixtureVBox);
+        configVBox.getChildren().add(testArtnetPacketButton);
 
         this.textProperty().bind(name.getlastValidatedString());
         
@@ -88,30 +95,30 @@ public class ModuleConfigView extends TitledPane {
         f.getFixtureDeleteButtonPressed().addListener(cl -> {
             lastChangedFixtureIndex = fixtureConfigViews.indexOf(f);
             System.out.println("Delete Fixture Button Pressed");
-            changeEventHandler.setEvent(ConfigPropertyTypes.DELETE_FIXTURE, -1, lastChangedFixtureIndex);
+            changeEventHandler.setEvent(DELETE_FIXTURE, -1, lastChangedFixtureIndex);
 
         });
         f.getFixtureName().addListener(cl -> {
             lastChangedFixtureIndex = fixtureConfigViews.indexOf(f);
             System.out.println("fixture name changed in module config view");
-            changeEventHandler.setEvent(ConfigPropertyTypes.FIXTURE_NAME, -1, lastChangedFixtureIndex, f.getFixtureName().get());
+            changeEventHandler.setEvent(FIXTURE_NAME, -1, lastChangedFixtureIndex, f.getFixtureName().get());
         });
         f.getFixtureUniverse().addListener(cl -> {
             lastChangedFixtureIndex = fixtureConfigViews.indexOf(f);
             System.out.println("fixture universe changed in module config view");
-            changeEventHandler.setEvent(ConfigPropertyTypes.FIXTURE_UNIVERSE, -1, lastChangedFixtureIndex, f.getFixtureUniverse().get());
+            changeEventHandler.setEvent(FIXTURE_UNIVERSE, -1, lastChangedFixtureIndex, f.getFixtureUniverse().get());
 
         });
         f.getFixtureChannelCount().addListener(cl -> {
             lastChangedFixtureIndex = fixtureConfigViews.indexOf(f);
             System.out.println("fixture channel count changed in module config view");
-            changeEventHandler.setEvent(ConfigPropertyTypes.FIXTURE_CHANNEL_COUNT, -1, lastChangedFixtureIndex, f.getFixtureChannelCount().get());
+            changeEventHandler.setEvent(FIXTURE_CHANNEL_COUNT, -1, lastChangedFixtureIndex, f.getFixtureChannelCount().get());
 
         });
         f.getFixtureChannelStart().addListener(cl -> {
             lastChangedFixtureIndex = fixtureConfigViews.indexOf(f);
             System.out.println("fixture channel start changed in module config view");
-            changeEventHandler.setEvent(ConfigPropertyTypes.FIXTURE_CHANNEL_START, -1, lastChangedFixtureIndex, f.getFixtureChannelStart().get());
+            changeEventHandler.setEvent(FIXTURE_CHANNEL_START, -1, lastChangedFixtureIndex, f.getFixtureChannelStart().get());
 
         });
 
@@ -141,7 +148,9 @@ public class ModuleConfigView extends TitledPane {
     
     public void setModuleEdit(boolean b) {
         name.setDisable(!b);
+        newFixtureButton.setDisable(!b);
         deleteModuleButton.setDisable(!b);
+        outputConfigViewer.setOutputConfigEdit(b);
         for (FixtureConfigView fixtureConfigView : fixtureConfigViews) {
         fixtureConfigView.setFixtureEdit(b);
         }

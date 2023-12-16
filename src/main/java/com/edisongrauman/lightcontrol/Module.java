@@ -12,11 +12,12 @@ import java.util.ArrayList;
  */
 public class Module {
 
+    int instanceID;
+
     String name;
     private OutputTypes outputType;
 
     private ArrayList<Fixture> fixtures = new ArrayList<>();
-//    ArtNetInstance artNetInstance;
 
     //Artnet Settings
     private String artnetIPAddress;
@@ -118,6 +119,13 @@ public class Module {
     public void setOscDestinationPort(String oscDestinationPort) {
         System.out.println("Set OSC Dest Port in Module");
         this.oscDestinationPort = oscDestinationPort;
+    }
+
+    public void setInstanceID(int id) {
+        instanceID = id;
+    }
+    public int getInstanceID() {
+        return instanceID;
     }
 
 }
